@@ -1,0 +1,3 @@
+[submodule "parts-exchange.backend"]
+	path = parts-exchange.backend
+	url = https://github.com/aquilae/parts-exchange.backend.git
