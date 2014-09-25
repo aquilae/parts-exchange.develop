@@ -44,14 +44,17 @@ def install(venv_path, nginx_path, backend_path):
     from json import dumps
 
     print('## Installing virtual environment')
-    Popen(['virtualenv', venv_path, '--prompt=parts-exchange.develop']).communicate()
+    Popen(['virtualenv', venv_path, '--prompt=parts-exchange.develop\n']).communicate()
 
     with Popen(['bash'], stdin=PIPE) as proc:
         proc.stdin.write('source {0}\n'.format(join(venv_path, 'bin/activate')).encode('utf-8'))
         print('## Installing required PIP packages')
-        proc.stdin.write('pip install -r {0}'.format(join(backend_path, 'src/parts_exchange/requirements.txt')).encode('utf-8'))
+        requirements = join(backend_path, 'src/parts_exchange/requirements.txt')
+        proc.stdin.write('pip install --allow-external=pyodbc --allow-unverified=pyodbc -r {0}'.format(requirements).encode('utf-8'))
         proc.communicate()
         proc.wait()
+        if proc.returncode != 0:
+            return
 
     print('## Patching NGINX configuration')
     with open(join(nginx_path, 'parts-exchange.develop.conf'), 'w', encoding='utf-8') as nginx:
@@ -94,6 +97,8 @@ def install(venv_path, nginx_path, backend_path):
     with Popen(['/etc/init.d/nginx', 'restart']) as proc:
         proc.communicate()
         proc.wait()
+        if proc.returncode != 0:
+            return
 
 
 if __name__ == '__main__':
