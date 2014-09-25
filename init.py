@@ -120,7 +120,7 @@ def install(steps):
                 remove(steps['venv']['path'])
             elif isdir(steps['venv']['path']):
                 rmtree(steps['venv']['path'])
-        Popen(['virtualenv', steps['venv']['path'], '--prompt=parts-exchange.develop\n']).communicate()
+        Popen(['virtualenv', steps['venv']['path'], '--prompt=(venv:parts-exchange.develop)']).communicate()
 
     if isfile(join(steps['venv']['path'], 'bin/activate')):
         with Popen(['bash'], stdin=PIPE) as proc:
