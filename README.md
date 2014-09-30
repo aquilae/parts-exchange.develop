@@ -15,3 +15,8 @@ parts-exchange.develop
 - `./backend/`  
 папка, в которую должен быть склонирован проект `parts-exchange.backend`  
 в Vagrant примонтирована как `/backend`  
+
+#### Доступ:
+- Vagrant-машина доступна по адресу 10.1.1.2
+- Backend-сервер uWSGI слушает порт :8001
+- NGINX прослушивает порт :8000 и апстримит /api/* на uWSGI :8001
