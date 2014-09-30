@@ -1,0 +1,74 @@
+# echo "## Updating apt-get"
+# apt-get update
+
+echo "## Checking FISH"
+which fish 2>/dev/null >/dev/null || apt-get -y install fish
+
+echo "## Checking nginx"
+which nginx 2>/dev/null >/dev/null || apt-get -y install nginx
+
+echo "## Checking python3"
+which python3 2>/dev/null >/dev/null || apt-get -y --force-yes install python3
+
+echo "## Checking pip3"
+which pip3 2>/dev/null >/dev/null || `apt-get -y install python3-pip && pip3 install virtualenv`
+
+echo "## Checking SSL libraries"
+if ! find / -name 'libssl.so.*' 2>/dev/null >/dev/null
+then
+  echo "## Installing libssl"
+  apt-get install -y libssl
+  if ! find / -name 'libssl.so.*' 2>/dev/null >/dev/null
+  then
+    echo "## Installing libssl1.0.0"
+    apt-get install -y libssl1.0.0
+  fi
+fi
+
+echo "## Checking ODBC"
+if ! find / -name 'sql.h' 2>/dev/null >/dev/null
+then
+  echo "## Installing unixODBC"
+  apt-get install unixodbc unixodbc-dev unixodbc-bin
+fi
+
+echo "## Checking RHEL-like symlinks"
+if ! find / -name 'libssl.so.10' 2>/dev/null >/dev/null
+then
+  export LIBSSL_PATH=`find / -name 'libssl.so.*'`
+  export LIBSSL_DIR=`dirname ${LIBSSL_PATH}`
+  ln -s ${LIBSSL_PATH} ${LIBSSL_DIR}/libssl.so.10
+  echo "## libssl.so.10 created"
+fi
+
+if ! find / -name 'libcrypto.so.10' 2>/dev/null >/dev/null
+then
+  export LIBCRYPTO_PATH=`find / -name 'libcrypto.so.*'`
+  export LIBCRYPTO_DIR=`dirname ${LIBCRYPTO_PATH}`
+  ln -s ${LIBCRYPTO_PATH} ${LIBCRYPTO_DIR}/libcrypto.so.10
+  echo "## libcrypto.so.10 created"
+fi
+
+echo "## Checking Microsoft SQL Server ODBC Driver"
+if ! which sqlcmd
+then
+  if [ ! -f /home/vagrant/sqlncli-11.0.1790.0.tar.gz 2>/dev/null >/dev/null ]
+  then
+    cp -t /home/vagrant /vagrant/sqlncli-11.0.1790.0.tar.gz
+    (cd /home/vagrant ; tar -xf sqlncli-11.0.1790.0.tar.gz)
+  fi
+  bash /home/vagrant/sqlncli-11.0.1790.0/install.sh install --force --accept-license
+fi
+
+echo "## Checking nginx config file"
+cat /etc/nginx/conf.d/parts-exchange.conf 2>/dev/null >/dev/null || ln -s /vagrant/nginx.conf /etc/nginx/conf.d/parts-exchange.conf
+
+echo "## Checking FISH config file"
+cat /home/vagrant/.config/fish/config.fish 2>/dev/null >/dev/null || `mkdir -p /home/vagrant/.config/fish && ln -s /vagrant/config.fish /home/vagrant/.config/fish/config.fish`
+
+echo "## Creating Backend environment"
+ls /home/vagrant/venv/backend 2>/dev/null >/dev/null || virtualenv --prompt="(PARTS-EXCHANGE.BACKEND) " /home/vagrant/venv/backend
+
+echo "## Installing Python/PIP packages"
+source /home/vagrant/venv/backend/bin/activate
+pip3 install --allow-external=pyodbc --allow-unverified=pyodbc -r /vagrant/backend/src/parts_exchange/requirements.txt

@@ -58,3 +58,6 @@ parts-exchange.backend/
 
 # VENV
 venv/
+
+# Sublime
+*.sublime*

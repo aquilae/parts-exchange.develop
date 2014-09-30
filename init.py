@@ -1,5 +1,14 @@
+class D:
+    __init__(self, **kwargs):
+        self._items = kwargs
+
+    def __getitem__(self, name):
+        return self._items.get(name, self._items['default'])
+
+
 def prompt():
     from sys import exit
+    from os import platform
     from os.path import abspath
 
     steps = {
@@ -13,7 +22,13 @@ def prompt():
         },
         'nginx': {
             'label': 'nginx configuration path',
-            'default': '/etc/nginx/conf.d/parts-exchange.dev.conf'
+            'default': D(win='c:/nginx/conf/conf.d/parts-exchange.dev.conf',
+                         default='/etc/nginx/conf.d/parts-exchange.dev.conf')[platform]
+        },
+        'nginx-restart': {
+            'label': 'nginx restart command',
+            'default': D(win='c:/nginx/nginx.exe -p c:/nginx -s reload',
+                         default='/etc/init.d/nginx restart')[platform]
         }
     }
 
