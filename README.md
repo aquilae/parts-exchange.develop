@@ -1,6 +1,17 @@
 parts-exchange.develop
 ======================
 
-`sudo python3 init.py` - инициализация рабочего окружения, создание virtualenv, генерация конфигов  
-`source venv/nix.dev/activate` (bash) или `. ./venv/nix.dev/activate` (fish) - загрузка virtualenv  
-`python3 backend/uwsgi.py` - запуск backend-сервера (uWSGI)  
+#### Команды:
+- `./up (*nix)` или `up (win)`  
+запуск и подключение к виртуальной машине и обновление пакетов и зависимостей
+- `down` (внутри сессии SSH)  
+останов виртуальной машины
+- `backend` (внутри сессии SSH)  
+запуск backend-сервера uWSGI (foreground)
+
+#### Структура:
+- `./vagrant/`  
+все файлы, относящиеся к настройке Vagrant  
+- `./backend/`  
+папка, в которую должен быть склонирован проект `parts-exchange.backend`  
+в Vagrant примонтирована как `/backend`  
