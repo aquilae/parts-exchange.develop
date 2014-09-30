@@ -1,7 +1,8 @@
 echo
 echo "## Making YUM cache"
-yum makecache
-yum -y install deltarpm make automake gcc gcc-c++ kernel-devel
+yum -y makecache
+yum -y install deltarpm
+yum -y install make automake gcc gcc-c++ kernel-devel
 
 echo
 echo "## Checking unixODBC"
@@ -22,8 +23,9 @@ if [ ! -d /home/vagrant/sqlncli-11.0.1790.0 ] ; then
 	(cd /home/vagrant && tar -xf sqlncli-11.0.1790.0.tar.gz )
 fi
 if ! which sqlcmd 2>/dev/null >/dev/null ; then
-	sed 's|req_dm_ver="2.3.0"|req_dm_ver="2.3.2"|' /home/vagrant/sqlncli-11.0.1790.0/install.sh > /home/vagrant/sqlncli-11.0.1790.0/install.sh.patched
-	bash /home/vagrant/sqlncli-11.0.1790.0/install.sh.patched install --force --accept-license 2>/dev/null
+	# sed 's|req_dm_ver="2.3.0"|req_dm_ver="2.3.2"|' /home/vagrant/sqlncli-11.0.1790.0/install.sh > /home/vagrant/sqlncli-11.0.1790.0/install.sh.patched
+	# bash /home/vagrant/sqlncli-11.0.1790.0/install.sh.patched install --force --accept-license 2>/dev/null
+	(cd /home/vagrant/sqlncli-11.0.1790.0 && chmod +x ./install.sh && bash ./install.sh install --force --accept-license)
 fi
 
 echo
@@ -67,8 +69,8 @@ echo
 echo "## Checking NGINX config"
 if [ ! -f /etc/nginx/conf.d/parts-exchange.conf ] ; then
 	ln -s /vagrant/nginx.conf /etc/nginx/conf.d/parts-exchange.conf
-	/etc/nginx 
 fi
+nginx -t && service nginx restart
 
 echo
 echo "## Creating Backend environment"
@@ -82,4 +84,4 @@ source /home/vagrant/venv/backend/bin/activate
 
 echo
 echo "### Installing PIP packages required for Backend"
-pip-python3 install --upgrade -r /vagrant/backend/src/parts_exchange/requirements.txt
+pip-python3 install --upgrade -r /backend/src/parts_exchange/requirements.txt

@@ -61,3 +61,6 @@ venv/
 
 # Sublime
 *.sublime*
+
+.directory
+.vagrant
