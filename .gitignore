@@ -60,7 +60,8 @@ parts-exchange.backend/
 venv/
 
 # Sublime
-*.sublime*
+#*.sublime*
+*.sublime-workspace
 
 .directory
 .vagrant

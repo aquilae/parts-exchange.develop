@@ -1,0 +1,13 @@
+{
+	"folders":
+	[
+		{
+			"path": ".",
+			"folder_exclude_patterns": ["backend", "env"]
+		},
+		{
+			"path": "./backend",
+			"folder_exclude_patterns": [".git", ".idea"]
+		}
+	]
+}
