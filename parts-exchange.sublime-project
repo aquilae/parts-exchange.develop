@@ -3,11 +3,11 @@
 	[
 		{
 			"path": ".",
-			"folder_exclude_patterns": ["backend", "env"]
+			"folder_exclude_patterns": ["backend", ".vagrant", "__pycache__"]
 		},
 		{
 			"path": "./backend",
-			"folder_exclude_patterns": [".git", ".idea"]
+			"folder_exclude_patterns": [".git", ".idea", "__pycache__"]
 		}
 	]
 }
