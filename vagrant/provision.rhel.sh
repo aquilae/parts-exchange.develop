@@ -84,4 +84,4 @@ source /home/vagrant/venv/backend/bin/activate
 
 echo
 echo "### Installing PIP packages required for Backend"
-pip-python3 install --upgrade -r /backend/src/parts_exchange/requirements.txt
+pip3 install --upgrade -r /backend/src/parts_exchange/requirements.txt --allow-external=pyodbc --allow-unverified=pyodbc
