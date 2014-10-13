@@ -4,6 +4,10 @@ yum -y makecache
 yum -y install deltarpm
 yum -y install make automake gcc gcc-c++ kernel-devel
 
+if ! which screen 2>/dev/null >/dev/null ; then
+	yum -y install screen
+fi
+
 echo
 echo "## Checking unixODBC"
 yum -y install unixODBC unixODBC-devel
@@ -59,6 +63,18 @@ if ! which virtualenv 2>/dev/null >/dev/null ; then
 fi
 
 echo
+echo "## Checking Node.JS"
+if ! which node 2>/dev/null >/dev/null ; then
+	yum -y install nodejs
+fi
+
+echo
+echo "## Checking npm"
+if ! which npm 2>/dev/null >/dev/null ; then
+	yum -y install npm
+fi
+
+echo
 echo "## Checking FISH config"
 if [ ! -f /home/vagrant/.config/fish/config.fish ] ; then
 	mkdir -p /home/vagrant/.config/fish
@@ -70,7 +86,13 @@ echo "## Checking NGINX config"
 if [ ! -f /etc/nginx/conf.d/parts-exchange.conf ] ; then
 	ln -s /vagrant/nginx.conf /etc/nginx/conf.d/parts-exchange.conf
 fi
-nginx -t && service nginx restart
+nginx -t && systemctl restart nginx
+
+echo
+echo "## Checking Backend config"
+if [ ! -f /backend/config.json ] ; then
+	echo > /backend/config.json
+fi
 
 echo
 echo "## Creating Backend environment"
@@ -85,3 +107,59 @@ source /home/vagrant/venv/backend/bin/activate
 echo
 echo "### Installing PIP packages required for Backend"
 pip3 install --upgrade -r /backend/src/parts_exchange/requirements.txt --allow-external=pyodbc --allow-unverified=pyodbc
+
+echo
+echo "Creating Frontend symlink environment"
+if [ ! -d /frontend ] ; then
+	rm -f /frontend
+	mkdir /frontend
+fi
+if [ ! -d /frontend/src ] ; then
+	rm -f /frontend/src
+	mkdir /frontend/src
+fi
+if [ ! -d /frontend/src/server ] ; then
+	rm -f /frontend/src/server
+	mkdir /frontend/src/server
+fi
+if [ ! -d /frontend/src/server/node_modules ] ; then
+	rm -f /frontend/src/server/node_modules
+	mkdir /frontend/src/server/node_modules
+fi
+if [ -d /frontend_ntfs ] ; then
+	cd /frontend_ntfs
+	for P in * ; do
+		if [ ! -f "/frontend/$P" ] ; then
+			if [ ! -d "/frontend/$P" ] ; then
+				echo "link: /frontend/$P => /frontend_ntfs/$P"
+				ln -s "/frontend_ntfs/$P" "/frontend/$P"
+			fi
+		fi
+	done
+fi
+if [ -d /frontend_ntfs/src ] ; then
+	cd /frontend_ntfs/src
+	for P in * ; do
+		if [ ! -f "/frontend/src/$P" ] ; then
+			if [ ! -d "/frontend/src/$P" ] ; then
+				echo "link: /frontend/src/$P => /frontend_ntfs/src/$P"
+				ln -s "/frontend_ntfs/src/$P" "/frontend/src/$P"
+			fi
+		fi
+	done
+fi
+if [ -d /frontend_ntfs/src/server ] ; then
+	cd /frontend_ntfs/src/server
+	for P in * ; do
+		if [ ! -f "/frontend/src/server/$P" ] ; then
+			if [ ! -d "/frontend/src/server/$P" ] ; then
+				echo "link: /frontend/src/server/$P => /frontend_ntfs/src/server/$P"
+				ln -s "/frontend_ntfs/src/server/$P" "/frontend/src/server/$P"
+			fi
+		fi
+	done
+fi
+
+echo
+echo "### Installing npm packages required for Frontend"
+(cd /frontend/src/server && npm install)
