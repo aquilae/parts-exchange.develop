@@ -89,9 +89,9 @@ fi
 nginx -t && systemctl restart nginx
 
 echo
-echo "## Checking Backend config"
+echo "## Checking Backend config [DISABLED]"
 if [ ! -f /backend/config.json ] ; then
-	echo > /backend/config.json
+	# echo > /backend/config.json
 fi
 
 echo
