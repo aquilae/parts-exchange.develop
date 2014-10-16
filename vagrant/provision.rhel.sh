@@ -90,9 +90,9 @@ nginx -t && systemctl restart nginx
 
 echo
 echo "## Checking Backend config [DISABLED]"
-if [ ! -f /backend/config.json ] ; then
-	# echo > /backend/config.json
-fi
+# if [ ! -f /backend/config.json ] ; then
+#     echo > /backend/config.json
+# fi
 
 echo
 echo "## Creating Backend environment"
@@ -109,7 +109,7 @@ echo "### Installing PIP packages required for Backend"
 pip3 install --upgrade -r /backend/src/parts_exchange/requirements.txt --allow-external=pyodbc --allow-unverified=pyodbc
 
 echo
-echo "Creating Frontend symlink environment"
+echo "### Creating Frontend symlink environment"
 if [ ! -d /frontend ] ; then
 	rm -f /frontend
 	mkdir /frontend
