@@ -53,8 +53,14 @@ docs/_build/
 # PyBuilder
 target/
 
+# IDEA
+.idea/
+
 # backend
 parts-exchange.backend/
+
+# frontend
+parts-exchange.frontend/
 
 # VENV
 venv/
