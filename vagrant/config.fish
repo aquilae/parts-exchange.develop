@@ -7,7 +7,7 @@ function backend
 end
 
 function frontend
-  env NODE_PATH="/frontend/src/server/node_modules" DEBUG="*,-express:router,-express:router:*" node /frontend/src/server/bin/www.js
+  env NODE_PATH="/frontend/node_modules" DEBUG="*,-express:router,-express:router:*" coffee /frontend/bin/launcher.coffee
 end
 
 function scr
