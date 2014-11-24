@@ -1,11 +1,15 @@
 echo
 echo "## Making YUM cache"
-yum -y makecache
-yum -y install deltarpm
-yum -y install make automake gcc gcc-c++ kernel-devel
+# yum -y makecache
+# yum -y install deltarpm
+# yum -y install make automake gcc gcc-c++ kernel-devel
 
 if ! which screen 2>/dev/null >/dev/null ; then
     yum -y install screen
+fi
+
+if ! which git 2>/dev/null >/dev/null ; then
+    yum -y install git
 fi
 
 echo
@@ -114,14 +118,6 @@ if [ ! -d /frontend ] ; then
     rm -f /frontend
     mkdir /frontend
 fi
-if [ ! -d /frontend/src ] ; then
-    rm -f /frontend/src
-    mkdir /frontend/src
-fi
-if [ ! -d /frontend/src/server ] ; then
-    rm -f /frontend/src/server
-    mkdir /frontend/src/server
-fi
 if [ ! -d /frontend/node_modules ] ; then
     rm -f /frontend/node_modules
     mkdir /frontend/node_modules
@@ -133,39 +129,6 @@ if [ -d /frontend_ntfs ] ; then
             if [ ! -d "/frontend/$P" ] ; then
                 echo "link: /frontend/$P => /frontend_ntfs/$P"
                 ln -s "/frontend_ntfs/$P" "/frontend/$P"
-            fi
-        fi
-    done
-fi
-if [ -d /frontend_ntfs/bin ] ; then
-    cd /frontend_ntfs/bin
-    for P in * ; do
-        if [ ! -f "/frontend/bin/$P" ] ; then
-            if [ ! -d "/frontend/bin/$P" ] ; then
-                echo "link: /frontend/bin/$P => /frontend_ntfs/bin/$P"
-                ln -s "/frontend_ntfs/bin/$P" "/frontend/bin/$P"
-            fi
-        fi
-    done
-fi
-if [ -d /frontend_ntfs/src ] ; then
-    cd /frontend_ntfs/src
-    for P in * ; do
-        if [ ! -f "/frontend/src/$P" ] ; then
-            if [ ! -d "/frontend/src/$P" ] ; then
-                echo "link: /frontend/src/$P => /frontend_ntfs/src/$P"
-                ln -s "/frontend_ntfs/src/$P" "/frontend/src/$P"
-            fi
-        fi
-    done
-fi
-if [ -d /frontend_ntfs/src/server ] ; then
-    cd /frontend_ntfs/src/server
-    for P in * ; do
-        if [ ! -f "/frontend/src/server/$P" ] ; then
-            if [ ! -d "/frontend/src/server/$P" ] ; then
-                echo "link: /frontend/src/server/$P => /frontend_ntfs/src/server/$P"
-                ln -s "/frontend_ntfs/src/server/$P" "/frontend/src/server/$P"
             fi
         fi
     done
