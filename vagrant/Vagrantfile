@@ -67,6 +67,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/frontend", "1"]
 
     vb.customize ["modifyvm", :id, "--vrde", "on"]
+    vb.customize ["modifyvm", :id, "--vrdeport", "8009"]
   end
   
   # View the documentation for the provider you're using for more
