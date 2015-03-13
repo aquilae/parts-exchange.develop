@@ -1,8 +1,8 @@
 echo
 echo "## Making YUM cache"
-# yum -y makecache
-# yum -y install deltarpm
-# yum -y install make automake gcc gcc-c++ kernel-devel
+yum -y makecache
+yum -y install deltarpm
+yum -y install make automake gcc gcc-c++ kernel-devel
 
 if ! which yum-config-manager >/dev/null ; then
     yum -y install yum-utils
