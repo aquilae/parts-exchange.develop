@@ -4,6 +4,10 @@ echo "## Making YUM cache"
 # yum -y install deltarpm
 # yum -y install make automake gcc gcc-c++ kernel-devel
 
+if ! which yum-config-manager >/dev/null ; then
+    yum -y install yum-utils
+fi
+
 if ! which screen 2>/dev/null >/dev/null ; then
     yum -y install screen
 fi
@@ -46,6 +50,14 @@ echo
 echo "## Checking NGINX"
 if ! which nginx 2>/dev/null >/dev/null ; then
     yum -y install nginx
+fi
+
+echo
+echo "## Checking Mono"
+if ! which mono --version 2>/dev/null >/dev/null ; then
+    rpm --import "http://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF"
+    yum-config-manager --add-repo http://download.mono-project.com/repo/centos/
+    yum -y install mono-complete
 fi
 
 echo
